@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=new_rent
+      - POSTGRES_PASSWORD=VRu^FwGV5D%Twaz_forest
+      - POSTGRES_DB=new_rent_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - new_rent_default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U new_rent -d new_rent_development"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/backend
+      - bundle_path:/bundle
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_PASSWORD=VRu^FwGV5D%Twaz_forest
+    ports:
+      - '3001:3001'
+    networks:
+      - new_rent_default
+
+networks:
+  new_rent_default:
+    driver: bridge
+
+volumes:
+  redis:
+    driver: local
+  bundle_path:
+    driver: local
+  postgres_data:
+    driver: local
+
