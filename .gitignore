@@ -4,31 +4,69 @@
 # belong in git's global ignore instead:
 # `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`
 
-# Ignore bundler config.
+# Ignore IDE-specific files
+# IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Ignore macOS-specific files
+.DS_Store
+
+# Ignore bundler config
 /.bundle
 
-# Ignore all environment files.
+# Ignore all environment files
 /.env*
+/.env.local
+/.env.development
+/.env.test
+/.env.production
+!.env.example
 
-# Ignore all logfiles and tempfiles.
+# Ignore all logfiles and tempfiles
 /log/*
 /tmp/*
 !/log/.keep
 !/tmp/.keep
 
-# Ignore pidfiles, but keep the directory.
+# Ignore pidfiles, but keep the directory
 /tmp/pids/*
 !/tmp/pids/
 !/tmp/pids/.keep
 
-# Ignore storage (uploaded files in development and any SQLite databases).
+# Ignore storage (uploaded files in development and any SQLite databases)
 /storage/*
 !/storage/.keep
 /tmp/storage/*
 !/tmp/storage/
 !/tmp/storage/.keep
 
-# Ignore master key for decrypting credentials and more.
+# Ignore master key for decrypting credentials
 /config/master.key
-.DS_Store
-.idea
+
+# Ignore database files (for SQLite or similar)
+/db/*.sqlite3
+/db/*.sqlite3-*
+
+# Ignore Node.js dependencies (if applicable)
+/node_modules/
+/package-lock.json
+/yarn.lock
+
+# Ignore build output (for frontend or other compiled assets)
+/public/assets/*
+!/public/assets/.keep
+/dist/*
+/build/*
+
+# Ignore coverage reports (for testing)
+/coverage/*
+
+# Ignore editor backup files
+*~
+*.swp
+*.swo
+
+# Ignore local configuration overrides
+/config/*.local.yml
+/config/*.local.yaml
