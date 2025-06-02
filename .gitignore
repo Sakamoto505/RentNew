@@ -9,6 +9,7 @@
 .idea/
 *.iml
 
+
 # Ignore macOS-specific files
 .DS_Store
 
