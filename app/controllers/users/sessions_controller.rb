@@ -2,6 +2,17 @@ class Users::SessionsController < Devise::SessionsController
   include RackSessionFix
 
   respond_to :json
+
+  def new
+    render json: {
+      status: {code: 200, message: 'Login page'},
+      data: {
+        login_url: '/login',
+        signup_url: '/signup'
+      }
+    }, status: :ok
+  end
+
   private
 
   def respond_with(resource, _opts = {})
