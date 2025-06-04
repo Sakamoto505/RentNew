@@ -1,9 +1,9 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  host: db
-  username: new_rent
-  password: VRu^FwGV5D%Twaz_forest
+#  host: db
+#  username: new_rent
+#  password: VRu^FwGV5D%Twaz_forest
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 development:
   <<: *default
@@ -11,8 +11,27 @@ development:
 test:
   <<: *default
   database: new_rent_test
-production:
-  <<: *default
-  database: new_rent
-  username: new_rent
-  password: new_rent_development
+#production:
+#  <<: *default
+#  database: new_rent
+#  username: new_rent
+#  password: new_rent_development
+
+  production:
+    primary: &primary_production
+      <<: *default
+      database: new_rent_production
+      username: new_rent
+      password: <%= ENV["NEW_RENT_DATABASE_PASSWORD"] %>
+    cache:
+      <<: *primary_production
+      database: new_rent_production_cache
+      migrations_paths: db/cache_migrate
+    queue:
+      <<: *primary_production
+      database: new_rent_production_queue
+      migrations_paths: db/queue_migrate
+    cable:
+      <<: *primary_production
+      database: new_rent_production_cable
+      migrations_paths: db/cable_migrate

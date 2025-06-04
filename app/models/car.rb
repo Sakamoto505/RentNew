@@ -1,5 +1,7 @@
 class Car < ApplicationRecord
   belongs_to :user
+  has_many :car_images, dependent: :destroy
+  accepts_nested_attributes_for :car_images, allow_destroy: true
 
   enum :category, {
     economy: 'economy',
@@ -11,7 +13,7 @@ class Car < ApplicationRecord
     electric: 'electric'
   }
 
-  validates :title, :price, :location, presence: true
+  # validates :title, :price, :location, presence: true
 
 
 end
