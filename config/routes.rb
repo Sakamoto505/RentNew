@@ -8,5 +8,8 @@
                  sessions: 'users/sessions',
                  registrations: 'users/registrations'
                }
+
+    resources :cars, only: [:index, :show, :create, :update, :destroy]
+
   end
 

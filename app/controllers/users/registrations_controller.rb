@@ -5,16 +5,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   respond_to :json
 
-  def new
-    render json: {
-      status: {code: 200, message: 'Registration page'},
-      data: {
-        signup_url: '/signup',
-        login_url: '/login',
-        required_fields: ['email', 'password', 'password_confirmation']
-      }
-    }, status: :ok
-  end
 
   private
 

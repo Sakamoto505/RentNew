@@ -319,6 +319,6 @@ Devise.setup do |config|
       ['DELETE', %r{^/logout$}]
     ]
     # ЗАМЕНИТЬ НА РЕЛИЗЕ
-    jwt.expiration_time = 30.minutes.to_i
+    jwt.expiration_time = 9999.minutes.to_i
   end
 end
