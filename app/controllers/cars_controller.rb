@@ -8,9 +8,50 @@
     end
 
     def show
-      car = Car.find(params[:id])
-      render json: car
+      car = Car.includes(:car_images, :user).find(params[:id])
+      owner = car.user
+
+      render json: {
+        id: car.id,
+        title: car.title,
+        description: car.description,
+        category: car.category,
+        location: car.location,
+        price_per_day: car.price,
+        year: car.year,
+        engine_capacity: car.engine_capacity,
+        contacts: {
+          whatsapp: {
+            number: owner.whatsapp,
+            label: "WhatsApp — для бронирования"
+          },
+          telegram: {
+            handle: owner.telegram,
+            label: "Telegram — быстрые ответы"
+          },
+          phone_1: {
+            number: owner.phone,
+            label: "Основной номер"
+          },
+        },
+        images: car.car_images.map(&:image_url),
+        custom_fields: [
+          { key: "Тип кузова", value: car.body_type },
+          { key: "Коробка передач", value: car.gearbox_type },
+          { key: "Кондиционер", value: car.has_air_conditioner ? "есть" : "нет" },
+          { key: "Салон", value: car.interior_description },
+          { key: "Цвет", value: car.color },
+          { key: "Пробег", value: car.mileage }
+        ],
+        specs: {
+          fuel: car.fuel_type,
+          drive: car.transmission
+        },
+        created_at: car.created_at
+      }
     end
+
+
 
     def create
       car = current_user.cars.build(car_params)
