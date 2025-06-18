@@ -52,12 +52,16 @@
       def serialize_profile(user)
         {
           id: user.id,
+          email: user.email,
+          role: user.role,
           company_name: user.company_name,
           phone: user.phone,
           whatsapp: user.whatsapp,
           telegram: user.telegram,
           instagram: user.instagram,
-          logo_url: user.company_logo&.url
+          logo_url: user.company_logo&.url,
+          created_at: user.created_at,
+          created_date: user.created_at.strftime('%d/%m/%Y')
         }
       end
-    end
+      end
