@@ -5,11 +5,13 @@ class ApplicationController < ActionController::API
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [
-      :role
+      :role,
+      :company_name
     ])
 
     devise_parameter_sanitizer.permit(:account_update, keys: [
-      :role
+      :role,
+      :company_name
 
     ])
   end
