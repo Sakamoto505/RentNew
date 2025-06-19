@@ -46,7 +46,11 @@
       private
 
       def profile_params
-        params.permit(:company_name, :phone, :whatsapp, :telegram, :instagram)
+        params.permit(:company_name, :whatsapp, :telegram, :instagram, :website,
+                      :about,
+                      :address, phone_1: [:number, :label],
+                      phone_2: [:number, :label]
+        )
       end
 
       def serialize_profile(user)
@@ -55,13 +59,18 @@
           email: user.email,
           role: user.role,
           company_name: user.company_name,
-          phone: user.phone,
+          phone_1: user.phone_1,
+          phone_2: user.phone_2,
           whatsapp: user.whatsapp,
           telegram: user.telegram,
           instagram: user.instagram,
+          website: user.website,
+          about: user.about,
+          address: user.address,
           logo_url: user.company_logo&.url,
           created_at: user.created_at,
           created_date: user.created_at.strftime('%d/%m/%Y')
         }
       end
-      end
+
+    end

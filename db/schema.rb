@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_11_113736) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_082739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -66,6 +66,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_11_113736) do
     t.string "whatsapp"
     t.string "telegram"
     t.string "instagram"
+    t.jsonb "phone_1"
+    t.jsonb "phone_2"
+    t.string "website"
+    t.text "about"
+    t.string "address"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
