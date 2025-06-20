@@ -1,5 +1,7 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
+  include ImageUploader::Attachment(:company_avatar)
+
   has_many :company_logos, dependent: :destroy
   accepts_nested_attributes_for :company_logos, allow_destroy: true
 

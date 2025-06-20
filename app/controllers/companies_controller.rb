@@ -39,8 +39,9 @@
 
 
       def update_profile
+        current_user.company_avatar = params[:company_avatar] if params[:company_avatar].present?
         if params[:company_logos].present?
-          current_user.company_logos.destroy_all # если нужно перезаписать
+          current_user.company_logos.destroy_all
           params[:company_logos].each_with_index do |uploaded_file, i|
             current_user.company_logos.create!(image: uploaded_file, position: i)
           end
@@ -78,6 +79,7 @@
           instagram: user.instagram,
           website: user.website,
           about: user.about,
+          company_avatar_url: user.company_avatar&.url,
           address: user.address,
           logo_urls: user.company_logos.order(:position).map(&:image_url),
           created_at: user.created_at,
