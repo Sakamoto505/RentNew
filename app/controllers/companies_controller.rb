@@ -17,7 +17,7 @@
           telegram: current_user.telegram,
           whatsapp: current_user.whatsapp,
           instagram: current_user.instagram,
-          logo_url: current_user.company_logo&.url,
+          logo_urls: current_user.company_logos.order(:position).map(&:image_url),
           created_at: current_user.created_at,
           created_date: current_user.created_at.strftime('%d/%m/%Y')
         }
@@ -33,7 +33,7 @@
           telegram: user.telegram,
           whatsapp: user.whatsapp,
           instagram: user.instagram,
-          logo_url: user.company_logo&.url
+          logo_url: user.company_logos.order(:position).map(&:image_url)
         }
       end
 
