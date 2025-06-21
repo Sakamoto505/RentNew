@@ -55,7 +55,8 @@
           end
 
           new_files.each_with_index do |file, i|
-            position = params[:positions]&.dig(i.to_s)&.to_i || (current_user.company_logos.maximum(:position).to_i + 1)
+            position_param = params[:positions]&.dig(i.to_s)
+            position = position_param.present? ? position_param.to_i : (current_user.company_logos.maximum(:position).to_i + 1)
             current_user.company_logos.create!(image: file, position: position)
           end
         end
@@ -70,6 +71,7 @@
           render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
         end
       end
+
 
 
 
