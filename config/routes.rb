@@ -16,5 +16,7 @@
     get 'companies/:id', to: 'companies#show'
     resources :cars, only: [:index, :show, :create, :update, :destroy] do
     end
+    resources :company_logos, only: [:destroy]
+
   end
 
