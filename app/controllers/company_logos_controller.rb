@@ -1,6 +1,8 @@
 class CompanyLogosController < ApplicationController
   before_action :authenticate_user!
 
+
+
   def destroy
     logo = current_user.company_logos.find_by(id: params[:id])
 
