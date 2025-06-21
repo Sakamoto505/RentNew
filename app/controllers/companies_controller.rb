@@ -13,6 +13,7 @@
           website: current_user.website,
           about: current_user.about,
           company_name: current_user.company_name,
+          company_avatar_url: current_user.company_avatar&.url,
           phone: current_user.phone,
           telegram: current_user.telegram,
           whatsapp: current_user.whatsapp,
