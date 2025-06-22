@@ -46,31 +46,39 @@
 
 
       def update_profile
-        if params[:company_logos].present?
-          current_count = current_user.company_logos.count
-          new_files = params[:company_logos]
+        if params[:logo_positions].present?
+          logo_positions = JSON.parse(params[:logo_positions])
+          new_files = params[:company_logos] || []
+          new_file_index = 0
 
-          if current_count + new_files.size > 6
-            return render json: { error: "Можно загрузить не более 6 изображений" }, status: :unprocessable_entity
-          end
+          logo_positions.each do |entry|
+            if entry["id"].present?
+              # Обновляем позицию уже существующего логотипа
+              logo = current_user.company_logos.find_by(id: entry["id"])
+              logo&.update(position: entry["position"])
+            else
+              # Создаём новый логотип
+              file = new_files[new_file_index]
+              new_file_index += 1
 
-          new_files.each_with_index do |file, i|
-            position_param = params[:positions]&.dig(i.to_s)
-            position = position_param.present? ? position_param.to_i : (current_user.company_logos.maximum(:position).to_i + 1)
-            current_user.company_logos.create!(image: file, position: position)
+              current_user.company_logos.create!(
+                image: file,
+                position: entry["position"]
+              )
+            end
           end
         end
 
-        if params[:company_avatar].present?
-          current_user.company_avatar = params[:company_avatar]
-        end
+        current_user.company_avatar = params[:company_avatar] if params[:company_avatar].present?
 
+        # Остальной профиль
         if current_user.update(profile_params)
           render json: serialize_profile(current_user)
         else
           render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
         end
       end
+
 
 
 
