@@ -51,6 +51,11 @@
           new_files = params[:company_logos] || []
           new_file_index = 0
 
+          total_count = current_user.company_logos.count + new_files.size
+          if total_count > 12
+            return render json: { error: "Можно загрузить не более 12 изображений" }, status: :unprocessable_entity
+          end
+
           logo_positions.each do |entry|
             if entry["id"].present?
               # Обновляем позицию уже существующего логотипа
@@ -71,18 +76,12 @@
 
         current_user.company_avatar = params[:company_avatar] if params[:company_avatar].present?
 
-        # Остальной профиль
         if current_user.update(profile_params)
           render json: serialize_profile(current_user)
         else
           render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
         end
       end
-
-
-
-
-
 
       private
 
