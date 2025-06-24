@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_20_210808) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_24_233054) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,12 +36,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_210808) do
     t.integer "year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "body_type"
-    t.string "gearbox_type"
     t.boolean "has_air_conditioner", default: false
-    t.string "interior_description"
-    t.string "color"
-    t.string "mileage"
+    t.integer "horsepower"
+    t.string "drive"
     t.index ["user_id"], name: "index_cars_on_user_id"
   end
 

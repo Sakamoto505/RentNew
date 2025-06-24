@@ -58,7 +58,6 @@
 
           logo_positions.each do |entry|
             if entry["id"].present?
-              # Обновляем позицию уже существующего логотипа
               logo = current_user.company_logos.find_by(id: entry["id"])
               logo&.update(position: entry["position"])
             else
