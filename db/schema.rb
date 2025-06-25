@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_24_233054) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_25_225752) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_24_233054) do
     t.boolean "has_air_conditioner", default: false
     t.integer "horsepower"
     t.string "drive"
+    t.jsonb "custom_fields"
     t.index ["user_id"], name: "index_cars_on_user_id"
   end
 

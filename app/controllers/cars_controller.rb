@@ -62,8 +62,8 @@ class CarsController < ApplicationController
       :horsepower,
       :year,
       :drive,
-      :has_air_conditioner,
-      :category
+      :category,
+      custom_fields: {}
     )
   end
 
@@ -90,9 +90,7 @@ class CarsController < ApplicationController
       car_images: car.car_images.order(:position).map do |img|
         { id: img.id, url: img.image_url, position: img.position }
       end,
-      custom_fields: [
-        { key: "Кондиционер", value: car.has_air_conditioner ? "есть" : "нет" }
-      ],
+      custom_fields: (car.custom_fields || {}).map { |k, v| { key: k, value: v } },
       contacts: {
         phone_1: user.phone_1,
         phone_2: user.phone_2,
