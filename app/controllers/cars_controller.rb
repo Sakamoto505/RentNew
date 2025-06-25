@@ -30,6 +30,12 @@ class CarsController < ApplicationController
   def update
     car = current_user.cars.find(params[:id])
 
+    if params[:custom_fields].present?
+      new_fields = params[:custom_fields].to_unsafe_h
+      car.custom_fields ||= {}
+      car.custom_fields.merge!(new_fields)
+    end
+
     if params[:images].present?
       params[:images].each_with_index do |image, i|
         car.car_images.build(image: image, position: car.car_images.size + i)
