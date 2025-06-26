@@ -14,8 +14,9 @@ class CarsController < ApplicationController
   def create
     car = current_user.cars.build(car_params)
 
-    if params[:images].present?
-      params[:images].each_with_index do |image, i|
+    image_list = params[:car_images] || params[:images]
+    if image_list.present?
+      image_list.each_with_index do |image, i|
         car.car_images.build(image: image, position: i)
       end
     end
@@ -30,15 +31,37 @@ class CarsController < ApplicationController
   def update
     car = current_user.cars.find(params[:id])
 
+    # Обновление custom_fields
     if params[:custom_fields].present?
       new_fields = params[:custom_fields].to_unsafe_h
       car.custom_fields ||= {}
       car.custom_fields.merge!(new_fields)
     end
 
-    if params[:images].present?
-      params[:images].each_with_index do |image, i|
-        car.car_images.build(image: image, position: car.car_images.size + i)
+    # Обновление позиций и добавление новых car_images
+    if params[:image_positions].present?
+      image_positions = JSON.parse(params[:image_positions])
+      new_files = params[:car_images] || []
+      new_file_index = 0
+
+      total_count = car.car_images.count + new_files.size
+      if total_count > 25
+        return render json: { error: "Можно загрузить не более 25 изображений" }, status: :unprocessable_entity
+      end
+
+      image_positions.each do |entry|
+        if entry["id"].present?
+          image = car.car_images.find_by(id: entry["id"])
+          image&.update(position: entry["position"])
+        else
+          file = new_files[new_file_index]
+          new_file_index += 1
+
+          car.car_images.create!(
+            image: file,
+            position: entry["position"]
+          )
+        end
       end
     end
 
@@ -48,6 +71,8 @@ class CarsController < ApplicationController
       render json: { errors: car.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
+
 
   def my_cars
     cars = current_user.cars.includes(:car_images, :user)
