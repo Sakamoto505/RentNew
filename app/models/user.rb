@@ -10,13 +10,15 @@ class User < ApplicationRecord
 
   has_many :cars, dependent: :destroy
 
-  enum :role, { client: 0, owner: 1 }
+  enum :role, { client: 0, company: 1 }
   validates :role, presence: true
-  validates :company_name, presence: true, if: -> { owner? }
+  validates :company_name, presence: true, if: -> { company }
 
   def update_role_based_on_cars
-    if cars.count > 3
-      update_column(:role, :owner) unless owner?
+    car_count = cars.reload.count
+
+    if car_count > 3
+      update_column(:role, :company) unless company?
     else
       update_column(:role, :client) unless client?
     end
