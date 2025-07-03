@@ -3,6 +3,11 @@ class CarsController < ApplicationController
 
   def index
     cars = Car.includes(:car_images, :user)
+
+    if params[:category].present?
+      cars = cars.where(category: params[:category])
+    end
+
     render json: cars.map { |car| car_response(car) }
   end
 
