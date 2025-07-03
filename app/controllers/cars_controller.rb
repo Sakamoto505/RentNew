@@ -133,7 +133,8 @@ class CarsController < ApplicationController
         whatsapp: user.whatsapp,
         telegram: user.telegram,
         instagram: user.instagram,
-        website: user.website
+        website: user.website,
+        region: user.region
       }
     }
   end

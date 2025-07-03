@@ -18,6 +18,7 @@
           telegram: current_user.telegram,
           whatsapp: current_user.whatsapp,
           instagram: current_user.instagram,
+          region: current_user.region,
           logo_urls: current_user.company_logos.order(:position).map do |logo|
             {
               id: logo.id,
@@ -86,7 +87,7 @@
 
       def profile_params
         params.permit(:company_name, :whatsapp, :telegram, :instagram, :website,
-                      :about,
+                      :about, :region,
                       :address, phone_1: [:number, :label],
                       phone_2: [:number, :label]
         )
@@ -103,6 +104,7 @@
           whatsapp: user.whatsapp,
           telegram: user.telegram,
           instagram: user.instagram,
+          region: user.region,
           website: user.website,
           about: user.about,
           company_avatar_url: user.company_avatar&.url,

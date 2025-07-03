@@ -2,6 +2,29 @@ class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
   include ImageUploader::Attachment(:company_avatar)
 
+  REGION_NAMES = {
+    dagestan: "Республика Дагестан",
+    ingushetia: "Республика Ингушетия",
+    kabardino_balkaria: "Кабардино-Балкарская Республика",
+    karachay_cherkessia: "Карачаево-Черкесская Республика",
+    north_ossetia: "Республика Северная Осетия — Алания",
+    chechnya: "Чеченская Республика",
+    stavropol_krai: "Ставропольский край",
+    adygea: "Республика Адыгея",
+    kalmykia: "Республика Калмыкия",
+    krasnodar_krai: "Краснодарский край",
+    astrakhan_oblast: "Астраханская область",
+    volgograd_oblast: "Волгоградская область",
+    rostov_oblast: "Ростовская область",
+    crimea: "Республика Крым",
+    sevastopol: "Город Севастополь"
+  }.freeze
+
+  def city_name
+    REGION_NAMES[region&.to_sym]
+  end
+
+
   has_many :company_logos, dependent: :destroy
   accepts_nested_attributes_for :company_logos, allow_destroy: true
 
@@ -12,7 +35,7 @@ class User < ApplicationRecord
 
   enum :role, { client: 0, company: 1 }
   validates :role, presence: true
-  validates :company_name, presence: true, if: -> { company }
+  # validates :company_name, presence: true, if: -> { company }
 
   def update_role_based_on_cars
     car_count = cars.reload.count
