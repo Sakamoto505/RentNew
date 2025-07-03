@@ -35,7 +35,7 @@ class User < ApplicationRecord
 
   enum :role, { client: 0, company: 1 }
   validates :role, presence: true
-  # validates :company_name, presence: true, if: -> { company }
+  validates :company_name, presence: true, if: :company?
 
   def update_role_based_on_cars
     car_count = cars.reload.count
