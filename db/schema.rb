@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_03_105923) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_03_113457) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_03_105923) do
     t.integer "horsepower"
     t.string "drive"
     t.jsonb "custom_fields"
+    t.boolean "is_calendar", default: false
     t.index ["user_id"], name: "index_cars_on_user_id"
   end
 
