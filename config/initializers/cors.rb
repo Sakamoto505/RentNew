@@ -1,8 +1,7 @@
 # config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    # Allow requests from specific origins with credentials
-    origins 'http://localhost:5175', 'https://rentavtokavkaz.ru'
+    origins lambda { |origin, _env| origin }
 
     resource '/api/*',
              headers: :any,
