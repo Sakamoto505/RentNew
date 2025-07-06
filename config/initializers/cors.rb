@@ -1,9 +1,10 @@
 # config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'https://rentavtokavkaz.ru', 'http://localhost:5175'
+    # Allow requests from any origin (for local development)
+    origins %r{\Ahttps?://.*\z}
 
-    resource '*',
+    resource '/api/*',
              headers: :any,
              expose: ['Authorization'],
              methods: [:get, :post, :patch, :put, :delete, :options],
