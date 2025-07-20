@@ -20,10 +20,19 @@
           instagram: current_user.instagram,
           region: current_user.region,
           logo_urls: current_user.company_logos.order(:position).map do |logo|
+            url = logo.image_url
+            Rails.logger.info "=== COMPANY LOGO URL DEBUG ==="
+            Rails.logger.info "Logo ID: #{logo.id}"
+            Rails.logger.info "Generated URL: #{url}"
+            Rails.logger.info "Image data: #{logo.image_data}"
+            Rails.logger.info "Raw Shrine URL: #{logo.image&.url}"
+            Rails.logger.info "================================"
             {
               id: logo.id,
-              url: logo.image_url,
-              position: logo.position
+              url: url,
+              raw_url: logo.image&.url,
+              position: logo.position,
+              debug_data: logo.image_data
             }
           end,
           created_at: current_user.created_at,
@@ -110,9 +119,14 @@
           company_avatar_url: user.company_avatar&.url,
           address: user.address,
           logo_urls: user.company_logos.order(:position).map do |logo|
+            url = logo.image_url
+            Rails.logger.info "=== SERIALIZE LOGO URL DEBUG ==="
+            Rails.logger.info "Logo ID: #{logo.id}"
+            Rails.logger.info "Generated URL: #{url}"
+            Rails.logger.info "================================="
             {
               id: logo.id,
-              url: logo.image_url,
+              url: url,
               position: logo.position
             }
           end,

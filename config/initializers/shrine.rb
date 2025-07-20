@@ -27,8 +27,34 @@ Rails.logger.info "Resolved host: #{host}"
 Rails.logger.info "Full host: #{full_host}"
 Rails.logger.info "=========================="
 
-# Для compatibility с API prefix
-Shrine.plugin :url_options, store: { host: full_host, prefix: "/api" }, cache: { host: full_host, prefix: "/api" }
+puts "=== SHRINE URL CONFIG (PUTS) ==="
+puts "APP_HOST env: #{ENV['APP_HOST']}"
+puts "Resolved host: #{host}"
+puts "Full_host: #{full_host}"
+puts "================================="
+
+# Для compatibility с API prefix - попробуем другой подход
+Shrine.plugin :url_options, store: { host: full_host }, cache: { host: full_host }
+
+# Переопределим метод url для добавления /api префикса
+Shrine::UploadedFile.class_eval do
+  alias_method :original_url, :url
+  
+  def url(**options)
+    original_url = self.original_url(**options)
+    if original_url && !original_url.start_with?('http')
+      # Относительный URL - добавляем хост и префикс
+      host = ENV.fetch("APP_HOST", "localhost:3000")
+      protocol = host.include?("localhost") ? "http" : "https"
+      "#{protocol}://#{host}/api#{original_url}"
+    elsif original_url && original_url.include?(ENV.fetch("APP_HOST", "localhost:3000"))
+      # Абсолютный URL с нашим хостом - добавляем /api префикс если его нет
+      original_url.gsub("#{ENV.fetch("APP_HOST", "localhost:3000")}/uploads", "#{ENV.fetch("APP_HOST", "localhost:3000")}/api/uploads")
+    else
+      original_url
+    end
+  end
+end
 
 Shrine.logger = Rails.logger
 
