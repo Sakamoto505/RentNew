@@ -21,6 +21,12 @@ host = ENV.fetch("APP_HOST", "localhost:3000")
 protocol = host.include?("localhost") ? "http" : "https"
 full_host = "#{protocol}://#{host}"
 
+Rails.logger.info "=== SHRINE URL CONFIG ==="
+Rails.logger.info "APP_HOST env: #{ENV['APP_HOST']}"
+Rails.logger.info "Resolved host: #{host}"
+Rails.logger.info "Full host: #{full_host}"
+Rails.logger.info "=========================="
+
 # Для compatibility с API prefix
 Shrine.plugin :url_options, store: { host: full_host, prefix: "/api" }, cache: { host: full_host, prefix: "/api" }
 
