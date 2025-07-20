@@ -21,6 +21,7 @@ services:
     volumes:
       - ./:/backend
       - bundle_path:/bundle
+      - ./public/uploads:/backend/public/uploads
     depends_on:
       db:
         condition: service_healthy
