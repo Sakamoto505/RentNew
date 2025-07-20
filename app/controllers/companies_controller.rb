@@ -101,10 +101,9 @@
 
       def profile_params
         params.permit(:company_name, :whatsapp, :telegram, :instagram, :website,
-                      :about, :region, :company_avatar, :logo_positions,
+                      :about, :region, :company_avatar,
                       :address, phone_1: [:number, :label],
-                      phone_2: [:number, :label],
-                      company_logos: []
+                      phone_2: [:number, :label]
         )
       end
 
