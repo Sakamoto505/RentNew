@@ -19,9 +19,9 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/backend
+      - ./:/app
       - bundle_path:/bundle
-      - ./public/uploads:/backend/public/uploads
+      - ./public/uploads:/app/public/uploads
     depends_on:
       db:
         condition: service_healthy
