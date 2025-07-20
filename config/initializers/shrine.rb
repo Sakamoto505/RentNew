@@ -14,7 +14,7 @@ Shrine.plugin :validation_helpers
 Shrine.plugin :pretty_location
 Shrine.plugin :instrumentation
 
-# Простая конфигурация URL
+# Простая конфигурация URL без переопределения
 host = ENV.fetch("APP_HOST", "rentavtokavkaz.ru")
 Shrine.plugin :url_options, store: { 
   host: "https://#{host}", 
