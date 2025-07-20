@@ -13,7 +13,6 @@ done
 
 # Создание и миграция базы данных
 bundle exec rails db:create 2>/dev/null || true
-bundle exec rails db:migrate
 
 
 exec "$@"
