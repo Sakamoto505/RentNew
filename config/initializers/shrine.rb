@@ -22,7 +22,7 @@ protocol = host.include?("localhost") ? "http" : "https"
 full_host = "#{protocol}://#{host}"
 
 # Для compatibility с API prefix
-Shrine.plugin :url_options, store: { host: full_host, prefix: "/api" }
+Shrine.plugin :url_options, store: { host: full_host, prefix: "/api" }, cache: { host: full_host, prefix: "/api" }
 
 Shrine.logger = Rails.logger
 
