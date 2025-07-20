@@ -3,6 +3,11 @@
       before_action :authenticate_user!
 
       def show_profile
+        Rails.logger.info "=== SHOW_PROFILE CALLED ==="
+        Rails.logger.info "User ID: #{current_user.id}"
+        Rails.logger.info "Company logos count: #{current_user.company_logos.count}"
+        Rails.logger.info "=========================="
+        
         render json: {
           id: current_user.id,
           email: current_user.email,
@@ -96,9 +101,10 @@
 
       def profile_params
         params.permit(:company_name, :whatsapp, :telegram, :instagram, :website,
-                      :about, :region,
+                      :about, :region, :company_avatar, :logo_positions,
                       :address, phone_1: [:number, :label],
-                      phone_2: [:number, :label]
+                      phone_2: [:number, :label],
+                      company_logos: []
         )
       end
 

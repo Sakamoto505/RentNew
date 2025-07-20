@@ -99,7 +99,10 @@ class CarsController < ApplicationController
       :year,
       :drive,
       :category,
-      custom_fields: {}
+      :image_positions,
+      custom_fields: {},
+      car_images: [],
+      images: []
     )
   end
 

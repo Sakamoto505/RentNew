@@ -10,7 +10,18 @@ puts "=== SHRINE STORAGE DEBUG ==="
 puts "Rails.root: #{Rails.root}"
 puts "Cache storage path: #{File.join(Rails.root, 'public', 'uploads', 'cache')}"
 puts "Store storage path: #{File.join(Rails.root, 'public', 'uploads', 'store')}"
+puts "Time: #{Time.current}"
 puts "============================="
+
+# Проверим, что папки существуют
+cache_dir = File.join(Rails.root, 'public', 'uploads', 'cache')
+store_dir = File.join(Rails.root, 'public', 'uploads', 'store')
+
+FileUtils.mkdir_p(cache_dir) unless Dir.exist?(cache_dir)
+FileUtils.mkdir_p(store_dir) unless Dir.exist?(store_dir)
+
+puts "Cache dir exists: #{Dir.exist?(cache_dir)}"
+puts "Store dir exists: #{Dir.exist?(store_dir)}"
 
 Shrine.plugin :activerecord
 Shrine.plugin :cached_attachment_data
