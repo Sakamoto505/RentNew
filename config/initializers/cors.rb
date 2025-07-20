@@ -1,7 +1,9 @@
 # config/initializers/cors.rb
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins 'http://localhost:5175', 'http://77.87.99.172:5175', 'http://213.142.146.40:5175', 'https://rentavtokavkaz.ru'
+    origins 'https://rentavtokavkaz.ru',
+            /https?:\/\/localhost(?::\d+)?/,
+            /https?:\/\/\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?/
 
     resource '/api/*',
              headers: :any,
