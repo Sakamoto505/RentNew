@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_03_113457) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_28_092500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -53,6 +53,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_03_113457) do
     t.index ["user_id"], name: "index_company_logos_on_user_id"
   end
 
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "car_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["car_id"], name: "index_favorites_on_car_id"
+    t.index ["user_id", "car_id"], name: "index_favorites_on_user_id_and_car_id", unique: true
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -88,4 +98,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_03_113457) do
   add_foreign_key "car_images", "cars"
   add_foreign_key "cars", "users"
   add_foreign_key "company_logos", "users"
+  add_foreign_key "favorites", "cars"
+  add_foreign_key "favorites", "users"
 end
