@@ -7,7 +7,7 @@
         Rails.logger.info "User ID: #{current_user.id}"
         Rails.logger.info "Company logos count: #{current_user.company_logos.count}"
         Rails.logger.info "=========================="
-        
+
         render json: {
           id: current_user.id,
           email: current_user.email,
@@ -46,7 +46,9 @@
       end
 
       def show
-        user = User.find(params[:id])
+        user = User.includes(cars: :car_images).find_by(id: params[:id])
+
+        return render json: { error: 'Компания не найдена' }, status: :not_found unless user
 
         render json: {
           id: user.id,
@@ -55,9 +57,35 @@
           telegram: user.telegram,
           whatsapp: user.whatsapp,
           instagram: user.instagram,
-          logo_url: user.company_logos.order(:position).map(&:image_url)
+          region: user.region,
+          logo_url: user.company_logos.order(:position).map(&:image_url),
+          cars: user.cars.map do |car|
+            {
+              id: car.id,
+              title: car.title,
+              location: car.location,
+              price: car.price,
+              fuel_type: car.fuel_type,
+              transmission: car.transmission,
+              engine_capacity: car.engine_capacity,
+              horsepower: car.horsepower,
+              year: car.year,
+              drive: car.drive,
+              category: car.category,
+              is_calendar: car.is_calendar,
+              custom_fields: (car.custom_fields || {}).map { |k, v| { key: k, value: v } },
+              car_images: car.car_images.order(:position).map do |img|
+                {
+                  id: img.id,
+                  url: img.image_url,
+                  position: img.position
+                }
+              end
+            }
+          end
         }
       end
+
 
 
       def update_profile
@@ -100,7 +128,7 @@
       private
 
       def profile_params
-        params.permit(:company_name, :whatsapp, :telegram, :instagram, :website,
+        params.permit(:company_name, :whatsapp, :telegram, :instagram, :website, :logo_positions,
                       :about, :region, :company_avatar,
                       :address, phone_1: [:number, :label],
                       phone_2: [:number, :label]
