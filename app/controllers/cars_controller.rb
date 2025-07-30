@@ -2,13 +2,18 @@ class CarsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    cars = Car.includes(:car_images, :user)
+    cars = Car.includes(:car_images, :user).order(created_at: :desc)
+    pagy, records = pagy(cars, items: params[:per_page] || 20)
 
-    if params[:category].present?
-      cars = cars.where(category: params[:category])
-    end
-
-    render json: cars.map { |car| car_response(car) }
+    render json: {
+      cars: records.map { |car| car_response(car) },
+      meta: {
+        page: pagy.page,
+        per_page: pagy.vars[:items],
+        total: pagy.count,
+        pages: pagy.pages
+      }
+    }
   end
 
   def show
@@ -99,6 +104,7 @@ class CarsController < ApplicationController
       :year,
       :drive,
       :category,
+      :has_air_conditioner,
       :image_positions,
       custom_fields: {},
       car_images: [],

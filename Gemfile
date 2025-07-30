@@ -12,6 +12,7 @@ gem 'rack-cors'
 gem 'devise'
 gem 'devise-jwt'
 gem 'jsonapi-serializer'
+gem 'pagy'
 
 gem "shrine", "~> 3.5"
 gem "image_processing", "~> 1.12"
