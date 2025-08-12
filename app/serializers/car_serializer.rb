@@ -20,7 +20,7 @@ module CarSerializer
       category: car.category,
       created_at: car.created_at,
       updated_at: car.updated_at,
-      car_images: car.car_images.order(:position).map do |img|
+      car_images: car.car_images.order(:position).limit(5).map do |img|
         { id: img.id, url: img.image_url, position: img.position }
       end,
       custom_fields: (car.custom_fields || {}).map { |k, v| { key: k, value: v } },

@@ -105,7 +105,6 @@ class CarsController < ApplicationController
       :drive,
       :category,
       :has_air_conditioner,
-      :image_positions,
       custom_fields: {},
       car_images: [],
       images: []
