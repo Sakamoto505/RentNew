@@ -128,7 +128,7 @@
       private
 
       def profile_params
-        params.permit(:company_name, :whatsapp, :telegram, :instagram, :website, :logo_positions,
+        params.permit(:company_name, :whatsapp, :telegram, :instagram, :website,
                       :about, :region, :company_avatar,
                       :address, phone_1: [:number, :label],
                       phone_2: [:number, :label]

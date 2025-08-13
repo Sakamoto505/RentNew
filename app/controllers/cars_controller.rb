@@ -3,6 +3,19 @@ class CarsController < ApplicationController
 
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
+
+    if params[:category].present?
+      category_param = params[:category].to_s.downcase
+      
+      # Check if the category exists in our enum
+      if Car.categories.key?(category_param)
+        cars = cars.where(category: category_param)
+      else
+        # Return no results for invalid categories
+        cars = Car.none
+      end
+    end
+
     pagy, records = pagy(cars, items: params[:per_page] || 20)
 
     render json: {
