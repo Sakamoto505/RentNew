@@ -4,21 +4,26 @@ class CarsController < ApplicationController
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
 
-    if params[:category].present?
-      category_param = params[:category].to_s.downcase
-      
-      # Check if the category exists in our enum
-      if Car.categories.key?(category_param)
-        cars = cars.where(category: category_param)
+    if (category = params[:category].presence)
+      key = category.to_s.downcase
+      if Car.categories.key?(key)
+        # Безопасно для enum: кладём именно числовое значение enum
+        cars = cars.where(category: Car.categories[key])
       else
-        # Return no results for invalid categories
         cars = Car.none
       end
     end
 
-    # Set limit to 12 for category filtering, otherwise use default pagination
-    items_per_page = params[:category].present? ? 12 : (params[:per_page] || 20)
-    pagy, records = pagy(cars, items: items_per_page)
+    # 12, если есть фильтр по категории; иначе per_page (по умолчанию 20), с валидацией
+    per_page = if params[:category].present?
+                 12
+               else
+                 (params[:per_page].presence || 20).to_i
+               end
+    per_page = 20 if per_page <= 0
+    per_page = 100 if per_page > 100
+
+    pagy, records = pagy(cars, items: per_page)
 
     render json: {
       cars: records.map { |car| car_response(car) },
@@ -30,6 +35,7 @@ class CarsController < ApplicationController
       }
     }
   end
+
 
   def show
     car = Car.includes(:car_images, :user).find(params[:id])
