@@ -8,13 +8,15 @@ class Car < ApplicationRecord
   after_create :recalculate_user_role
   after_destroy :recalculate_user_role
   enum :category, {
-    economy: 'economy',
-    comfort: 'comfort',
-    business: 'business',
-    premium: 'premium',
+    mid: 'mid',
+    russian: 'russian',
     suv: 'suv',
+    cabrio: 'cabrio',
+    sport: 'sport',
+    premium: 'premium',
+    electric: 'electric',
     minivan: 'minivan',
-    electric: 'electric'
+    bike: 'bike',
   }
 
   # validates :title, :price, :location, presence: true
