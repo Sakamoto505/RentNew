@@ -21,7 +21,7 @@ class CarsController < ApplicationController
       if category_mode
         12
       else
-        (params[:per_page].presence || 20).to_i.clamp(1, 100)
+        (params[:per_page].presence || 12).to_i.clamp(1, 100)
       end
 
     pagy, records = pagy(cars, items: per_page)
