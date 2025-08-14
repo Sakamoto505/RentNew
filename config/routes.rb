@@ -17,6 +17,7 @@
     resources :cars, only: [:index, :show, :create, :update, :destroy] do
     end
     resources :company_logos, only: [:destroy]
+    resources :car_images, only: [:destroy]
     resources :favorites, only: [:index, :create] do
       collection do
         delete :destroy
