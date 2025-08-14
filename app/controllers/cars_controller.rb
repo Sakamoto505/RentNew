@@ -4,29 +4,39 @@ class CarsController < ApplicationController
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
 
+    # === Фильтр по категории (enum) ===
     if (category = params[:category].presence)
-      key = category.to_s.downcase
+      key = category.to_s.strip.downcase
       if Car.categories.key?(key)
-        # Безопасно для enum: кладём именно числовое значение enum
-        cars = cars.where(category: Car.categories[key])
+        cars = cars.where(category: Car.categories[key]) # enum как integer
+        category_mode = true
       else
         cars = Car.none
+        category_mode = true
       end
     end
 
-    # 12, если есть фильтр по категории; иначе per_page (по умолчанию 20), с валидацией
-    per_page = if params[:category].present?
-                 12
-               else
-                 (params[:per_page].presence || 20).to_i
-               end
-    per_page = 20 if per_page <= 0
-    per_page = 100 if per_page > 100
+    # === Пагинация ===
+    per_page =
+      if category_mode
+        12
+      else
+        (params[:per_page].presence || 20).to_i.clamp(1, 100)
+      end
 
     pagy, records = pagy(cars, items: per_page)
 
+    # === Формирование ответа только из records ===
+    cars_json = records.map { |car| car_response(car) }
+
+    # Предохранитель, если внезапно вернулось больше чем per_page
+    cars_json = cars_json.first(per_page) if cars_json.size > per_page
+
+    # Анти-кэш (чтобы не увидеть старый ответ)
+    response.set_header("Cache-Control", "no-store, max-age=0, must-revalidate")
+
     render json: {
-      cars: records.map { |car| car_response(car) },
+      cars: cars_json,
       meta: {
         page: pagy.page,
         per_page: pagy.vars[:items],
