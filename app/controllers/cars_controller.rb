@@ -16,7 +16,9 @@ class CarsController < ApplicationController
       end
     end
 
-    pagy, records = pagy(cars, items: params[:per_page] || 20)
+    # Set limit to 12 for category filtering, otherwise use default pagination
+    items_per_page = params[:category].present? ? 12 : (params[:per_page] || 20)
+    pagy, records = pagy(cars, items: items_per_page)
 
     render json: {
       cars: records.map { |car| car_response(car) },
