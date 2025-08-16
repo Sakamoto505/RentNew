@@ -24,6 +24,14 @@ module CarSerializer
         { id: img.id, url: img.image_url, position: img.position }
       end,
       custom_fields: (car.custom_fields || {}).map { |k, v| { key: k, value: v } },
+      owner: {
+        role: user.role,
+        company_avatar_url: user.company_avatar_url,
+        company_name: user.company_name,
+        address: user.address,
+        region: user.region,
+        created_date: user.created_at
+      },
       contacts: {
         phone_1: user.phone_1,
         phone_2: user.phone_2,
