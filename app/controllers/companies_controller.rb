@@ -116,8 +116,6 @@
           end
         end
 
-        current_user.company_avatar = params[:company_avatar] if params[:company_avatar].present?
-
         if current_user.update(profile_params)
           render json: serialize_profile(current_user)
         else
