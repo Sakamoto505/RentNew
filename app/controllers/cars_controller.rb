@@ -4,6 +4,11 @@ class CarsController < ApplicationController
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
 
+    # === Фильтр по региону ===
+    if (region = params[:region].presence)
+      cars = cars.joins(:user).where(users: { region: region })
+    end
+
     # === Фильтр по категории (enum) ===
     if (category = params[:category].presence)
       key = category.to_s.strip.downcase
