@@ -33,8 +33,8 @@ module CarSerializer
         created_date: user.created_at
       },
       contacts: {
-        phone_1: user.phone_1,
-        phone_2: user.phone_2,
+        phone_1: phone_with_label_check(user.phone_1),
+        phone_2: phone_with_label_check(user.phone_2),
         whatsapp: user.whatsapp,
         telegram: user.telegram,
         instagram: user.instagram,
@@ -42,5 +42,12 @@ module CarSerializer
         region: user.region
       }
     }
+  end
+
+  private
+
+  def self.phone_with_label_check(phone_data)
+    return nil if phone_data.blank? || phone_data['label'].blank?
+    phone_data
   end
 end

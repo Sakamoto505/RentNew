@@ -13,8 +13,8 @@
           email: current_user.email,
           role: current_user.role,
           address: current_user.address,
-          phone_1: current_user.phone_1,
-          phone_2: current_user.phone_2,
+          phone_1: phone_with_label_check(current_user.phone_1),
+          phone_2: phone_with_label_check(current_user.phone_2),
           website: current_user.website,
           about: current_user.about,
           company_name: current_user.company_name,
@@ -133,14 +133,19 @@
         )
       end
 
+      def phone_with_label_check(phone_data)
+        return nil if phone_data.blank? || phone_data['label'].blank?
+        phone_data
+      end
+
       def serialize_profile(user)
         {
           id: user.id,
           email: user.email,
           role: user.role,
           company_name: user.company_name,
-          phone_1: user.phone_1,
-          phone_2: user.phone_2,
+          phone_1: phone_with_label_check(user.phone_1),
+          phone_2: phone_with_label_check(user.phone_2),
           whatsapp: user.whatsapp,
           telegram: user.telegram,
           instagram: user.instagram,
