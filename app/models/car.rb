@@ -20,6 +20,13 @@ class Car < ApplicationRecord
   }
 
   # validates :title, :price, :location, presence: true
+
+  # Простой поиск по title
+  scope :search_by_title, ->(query) {
+    return all if query.blank?
+    where("title ILIKE ?", "%#{query}%")
+  }
+
   def recalculate_user_role
     user.update_role_based_on_cars
   end
