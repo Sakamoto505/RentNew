@@ -37,6 +37,9 @@ class User < ApplicationRecord
   enum :role, { client: 0, company: 1 }
   validates :role, presence: true
   validates :company_name, presence: true, if: :company?
+  validates :region, presence: true, if: :company?
+  validates :phone_1, presence: true, if: :company?
+  validates :region, inclusion: { in: REGION_NAMES.keys.map(&:to_s) }, if: -> { region.present? }
 
   def update_role_based_on_cars
     car_count = cars.reload.count

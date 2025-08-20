@@ -4,9 +4,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
   include RackSessionFix
 
   respond_to :json
-
+  before_action :configure_sign_up_params, only: [:create]
 
   private
+
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:role, :company_name, :region, phone_1: [:number, :label]])
+  end
 
   def respond_with(resource, _opts = {})
     if request.method == "POST" && resource.persisted?
