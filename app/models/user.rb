@@ -34,7 +34,7 @@ class User < ApplicationRecord
   has_many :cars, dependent: :destroy
   has_many :favorites
   has_many :favorite_cars, through: :favorites, source: :car
-  enum :role, { client: 0, company: 1 }
+  enum :role, { client: 0, company: 1, admin: 2 }
   validates :role, presence: true
   validates :company_name, presence: true, if: :company?
   validates :region, presence: true, if: :company?

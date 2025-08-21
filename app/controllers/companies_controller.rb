@@ -24,6 +24,8 @@
           whatsapp: current_user.whatsapp,
           instagram: current_user.instagram,
           region: current_user.region,
+          is_partner_verified: current_user.is_partner_verified || false,
+          is_phone_verified: current_user.is_phone_verified || false,
           logo_urls: current_user.company_logos.order(:position).map do |logo|
             url = logo.image_url
             Rails.logger.info "=== COMPANY LOGO URL DEBUG ==="
@@ -46,19 +48,37 @@
       end
 
       def show
-        user = User.includes(cars: :car_images).find_by(id: params[:id])
+        user = User.includes(:company_logos, cars: :car_images).find_by(id: params[:id])
 
         return render json: { error: 'Компания не найдена' }, status: :not_found unless user
 
         render json: {
           id: user.id,
+          email: user.email,
+          role: user.role,
           company_name: user.company_name,
+          address: user.address,
+          phone_1: phone_with_label_check(user.phone_1),
+          phone_2: phone_with_label_check(user.phone_2),
           phone: user.phone,
           telegram: user.telegram,
           whatsapp: user.whatsapp,
           instagram: user.instagram,
+          website: user.website,
+          about: user.about,
           region: user.region,
-          logo_url: user.company_logos.order(:position).map(&:image_url),
+          company_avatar_url: user.company_avatar&.url,
+          is_partner_verified: user.is_partner_verified || false,
+          is_phone_verified: user.is_phone_verified || false,
+          logo_urls: user.company_logos.order(:position).map do |logo|
+            {
+              id: logo.id,
+              url: logo.image_url,
+              position: logo.position
+            }
+          end,
+          created_at: user.created_at,
+          created_date: user.created_at.strftime('%d/%m/%Y'),
           cars: user.cars.map do |car|
             {
               id: car.id,
@@ -86,7 +106,21 @@
         }
       end
 
+      def company_names
+        companies = User.where(role: :company)
+                       .where.not(company_name: [nil, ""])
+                       .select(:id, :company_name)
+                       .order(:company_name)
 
+        render json: {
+          companies: companies.map do |company|
+            {
+              id: company.id,
+              company_name: company.company_name
+            }
+          end
+        }
+      end
 
       def update_profile
         if params[:logo_positions].present?
@@ -134,7 +168,7 @@
       end
 
       def phone_with_label_check(phone_data)
-        return nil if phone_data.blank? || phone_data['label'].blank?
+        return nil if phone_data.blank?
         phone_data
       end
 
@@ -154,6 +188,8 @@
           about: user.about,
           company_avatar_url: user.company_avatar&.url,
           address: user.address,
+          is_partner_verified: user.is_partner_verified || false,
+          is_phone_verified: user.is_phone_verified || false,
           logo_urls: user.company_logos.order(:position).map do |logo|
             url = logo.image_url
             Rails.logger.info "=== SERIALIZE LOGO URL DEBUG ==="

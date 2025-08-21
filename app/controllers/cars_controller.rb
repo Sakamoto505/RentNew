@@ -130,6 +130,28 @@ class CarsController < ApplicationController
     render json: cars.map { |car| car_response(car) }
   end
 
+  def bulk_show
+    car_ids = params[:ids]
+
+    if car_ids.blank?
+      return render json: { error: 'Параметр ids обязателен' }, status: :bad_request
+    end
+
+    # Преобразуем в массив если не массив
+    ids_array = car_ids.is_a?(Array) ? car_ids : [car_ids].flatten
+
+    cars = Car.includes(:car_images, :user).where(id: ids_array)
+
+    render json: {
+      cars: cars.map { |car| car_response(car) },
+      meta: {
+        requested: ids_array.length,
+        found: cars.length,
+        missing_ids: ids_array.map(&:to_i) - cars.pluck(:id)
+      }
+    }
+  end
+
   private
 
   def car_params

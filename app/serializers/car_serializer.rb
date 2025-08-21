@@ -47,7 +47,7 @@ module CarSerializer
   private
 
   def self.phone_with_label_check(phone_data)
-    return nil if phone_data.blank? || phone_data['label'].blank?
+    return nil if phone_data.blank?
     phone_data
   end
 end
