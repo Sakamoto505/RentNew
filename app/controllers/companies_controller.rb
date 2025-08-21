@@ -1,6 +1,6 @@
 
     class CompaniesController < ApplicationController
-      before_action :authenticate_user!
+      before_action :authenticate_user!, except: [:company_names]
 
       def show_profile
         Rails.logger.info "=== SHOW_PROFILE CALLED ==="
@@ -48,7 +48,7 @@
       end
 
       def show
-        user = User.includes(:company_logos, cars: :car_images).find_by(id: params[:id])
+        user = User.includes(:company_logos, cars: :car_images).find_by(company_name: params[:company_name])
 
         return render json: { error: 'Компания не найдена' }, status: :not_found unless user
 

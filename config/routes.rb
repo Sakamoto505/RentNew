@@ -13,7 +13,7 @@
 
     get 'company_profile', to: 'companies#show_profile'
     patch 'company_profile', to: 'companies#update_profile'
-    get 'companies/:id', to: 'companies#show'
+    get 'companies/:company_name', to: 'companies#show'
     get 'company_names', to: 'companies#company_names'
     resources :cars, only: [:index, :show, :create, :update, :destroy] do
       collection do
