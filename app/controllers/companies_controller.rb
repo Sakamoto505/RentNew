@@ -1,6 +1,6 @@
 
     class CompaniesController < ApplicationController
-      before_action :authenticate_user!, except: [:company_names]
+      before_action :authenticate_user!, except: [:company_names, :show]
 
       def show_profile
         Rails.logger.info "=== SHOW_PROFILE CALLED ==="
