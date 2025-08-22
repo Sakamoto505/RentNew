@@ -32,7 +32,7 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :cars, dependent: :destroy
-  has_many :favorites
+  has_many :favorites, dependent: :destroy
   has_many :favorite_cars, through: :favorites, source: :car
   enum :role, { client: 0, company: 1, admin: 2 }
   validates :role, presence: true

@@ -1,7 +1,7 @@
 class Car < ApplicationRecord
   belongs_to :user
   has_many :car_images, dependent: :destroy
-  has_many :favorites
+  has_many :favorites, dependent: :destroy
   has_many :favorited_by, through: :favorites, source: :user
   accepts_nested_attributes_for :car_images, allow_destroy: true
 
