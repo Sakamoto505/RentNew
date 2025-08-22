@@ -123,6 +123,12 @@ class CarsController < ApplicationController
     end
   end
 
+  def destroy
+    car = current_user.cars.find(params[:id])
+    car.destroy!
+    render json: { message: "Автомобиль успешно удален" }, status: :ok
+  end
+
 
 
   def my_cars
