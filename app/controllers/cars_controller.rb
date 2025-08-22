@@ -1,5 +1,5 @@
 class CarsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :bulk_show]
 
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
