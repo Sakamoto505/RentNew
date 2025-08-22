@@ -1,5 +1,5 @@
 class CarsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :bulk_show]
+  before_action :authenticate_user!, except: [:index, :show, :bulk_show, :total_count]
 
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
@@ -150,6 +150,10 @@ class CarsController < ApplicationController
         missing_ids: ids_array.map(&:to_i) - cars.pluck(:id)
       }
     }
+  end
+
+  def total_count
+    render json: { total_cars_count: Car.count }
   end
 
   private

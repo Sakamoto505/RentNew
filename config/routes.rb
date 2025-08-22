@@ -18,6 +18,7 @@
     resources :cars, only: [:index, :show, :create, :update, :destroy] do
       collection do
         post :bulk_show
+        get :total_count
       end
     end
     resources :company_logos, only: [:destroy]
