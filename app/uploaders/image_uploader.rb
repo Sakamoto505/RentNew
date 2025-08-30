@@ -8,7 +8,8 @@ class ImageUploader < Shrine
     validate_mime_type_inclusion ["image/jpeg", "image/png", "image/webp"]
   end
 
-  process(:store) do |io, context:|
+  process(:store) do |io, **options|
+    context = options[:context] || {}
     record = context[:record]
     name = context[:name]
     
