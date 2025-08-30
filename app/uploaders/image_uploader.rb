@@ -13,14 +13,20 @@ class ImageUploader < Shrine
     record = context[:record]
     name = context[:name]
 
+    Rails.logger.info "ImageUploader processing: record=#{record&.class}, name=#{name}"
+    
     if record.is_a?(User) && name == :company_avatar
       # Avatar compression to ~100kb
+      Rails.logger.info "Compressing avatar"
       compress_image(io, max_size: 100 * 1024, quality: 75)
     elsif record.is_a?(CarImage) || record.is_a?(CompanyLogo)
       # Company photos and car photos compression to 400-500kb
+      Rails.logger.info "Compressing company/car photo"
       compress_image(io, max_size: 450 * 1024, quality: 85)
     else
-      io
+      # Default compression for all other images
+      Rails.logger.info "Applying default compression"
+      compress_image(io, max_size: 450 * 1024, quality: 85)
     end
   end
 
