@@ -8,30 +8,24 @@ class ImageUploader < Shrine
     validate_mime_type_inclusion ["image/jpeg", "image/png", "image/webp"]
   end
 
-  process(:store) do |io, **options|
+  process(:cache) do |io, **options|
     context = options[:context] || {}
     record = context[:record]
     name = context[:name]
 
-    Rails.logger.info "ImageUploader processing: record=#{record&.class}, name=#{name}, io=#{io.class}"
-    
-    # Skip processing if it's already an UploadedFile (avoid double processing)
-    if io.is_a?(Shrine::UploadedFile)
-      Rails.logger.info "Skipping compression - already processed"
-      next io
-    end
+    Rails.logger.info "ImageUploader cache processing: record=#{record&.class}, name=#{name}, io=#{io.class}"
     
     if record.is_a?(User) && name == :company_avatar
       # Avatar compression to ~100kb
-      Rails.logger.info "Compressing avatar"
+      Rails.logger.info "Compressing avatar to ~100kb"
       compress_image(io, max_size: 100 * 1024, quality: 75)
     elsif record.is_a?(CarImage) || record.is_a?(CompanyLogo)
       # Company photos and car photos compression to 400-500kb
-      Rails.logger.info "Compressing company/car photo"
+      Rails.logger.info "Compressing company/car photo to ~450kb"
       compress_image(io, max_size: 450 * 1024, quality: 85)
     else
       # Default compression for all other images
-      Rails.logger.info "Applying default compression"
+      Rails.logger.info "Applying default compression to ~450kb"
       compress_image(io, max_size: 450 * 1024, quality: 85)
     end
   end
