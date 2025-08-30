@@ -31,6 +31,7 @@ Shrine.plugin :validation_helpers
 Shrine.plugin :pretty_location
 Shrine.plugin :instrumentation
 Shrine.plugin :processing
+Shrine.plugin :determine_mime_type
 
 # URLs will be relative paths without domain
 # host = ENV.fetch("APP_HOST", "rentavtokavkaz.ru")

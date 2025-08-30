@@ -47,7 +47,7 @@ class ImageUploader < Shrine
           .source(io)
           .resize_to_limit(1920, 1920)
           .quality(current_quality)
-          .convert("jpg")
+          .format("jpeg")
           .call
 
         Rails.logger.info "Compressed image: quality=#{current_quality}, size=#{processed_io.size} bytes, target=#{max_size} bytes"
