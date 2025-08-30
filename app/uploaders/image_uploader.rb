@@ -13,7 +13,13 @@ class ImageUploader < Shrine
     record = context[:record]
     name = context[:name]
 
-    Rails.logger.info "ImageUploader processing: record=#{record&.class}, name=#{name}"
+    Rails.logger.info "ImageUploader processing: record=#{record&.class}, name=#{name}, io=#{io.class}"
+    
+    # Skip processing if it's already an UploadedFile (avoid double processing)
+    if io.is_a?(Shrine::UploadedFile)
+      Rails.logger.info "Skipping compression - already processed"
+      next io
+    end
     
     if record.is_a?(User) && name == :company_avatar
       # Avatar compression to ~100kb
