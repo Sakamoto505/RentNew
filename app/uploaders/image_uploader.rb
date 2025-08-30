@@ -1,4 +1,4 @@
-Float class ImageUploader < Shrine
+class ImageUploader < Shrine
   plugin :validation_helpers
   plugin :processing
   plugin :derivatives
