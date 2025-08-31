@@ -15,23 +15,21 @@ class ImageUploader < Shrine
 
     Rails.logger.info "ImageUploader cache processing: record=#{record&.class}, name=#{name}, io=#{io.class}"
     Rails.logger.info "Record inspect: #{record.inspect}"
+    Rails.logger.info "Context inspect: #{context.inspect}"
 
-    if record.is_a?(User) && name == :company_avatar
+    # Determine image type by parameter name or model class
+    if name == :company_avatar
       # Avatar compression to ~100kb
       Rails.logger.info "Compressing avatar to ~100kb"
       compress_image(io, max_size: 100 * 1024, quality: 75)
-    elsif record.is_a?(CarImage)
+    elsif record.is_a?(CarImage) || context[:action] == "create" || context[:action] == "update"
       # Car photos compression to 400-500kb
       Rails.logger.info "Compressing car photo to ~450kb"
       compress_image(io, max_size: 450 * 1024, quality: 85)
-    elsif record.is_a?(CompanyLogo)
-      # Company logo compression to 100-150kb
+    else
+      # Company logo compression (default for company_logos uploads)
       Rails.logger.info "Compressing company logo to ~120kb"
       compress_image(io, max_size: 120 * 1024, quality: 60)
-    else
-      # Default compression for all other images
-      Rails.logger.info "Applying default compression to ~450kb"
-      compress_image(io, max_size: 450 * 1024, quality: 85)
     end
   end
 
