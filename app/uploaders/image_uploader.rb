@@ -75,36 +75,48 @@ class ImageUploader < Shrine
 
   def compress_and_watermark_car_image(io, max_size:, quality:)
     require "image_processing/mini_magick"
+    require "mini_magick"
     
     io.rewind
     current_quality = quality
-    processed_io = nil
     
     # Try different compression levels until we reach target size
     8.times do
       begin
         io.rewind
-        processed_io = ImageProcessing::MiniMagick
+        
+        # First resize and compress
+        temp_file = ImageProcessing::MiniMagick
           .source(io)
           .resize_to_limit(1920, 1920)
           .quality(current_quality)
           .format("jpeg")
-          .call do |magick|
-            magick.font_family "Arial"
-            magick.font_size "30"
-            magick.fill "rgba(255,255,255,0.8)"
-            magick.stroke "rgba(0,0,0,0.5)"
-            magick.stroke_width "1"
-            magick.gravity "SouthEast"
-            magick.annotate "+20+20", "rentavtokavkaz"
-          end
+          .call
         
-        Rails.logger.info "Compressed car image with watermark: quality=#{current_quality}, size=#{processed_io.size} bytes, target=#{max_size} bytes"
-        
-        if processed_io.size <= max_size
-          return processed_io
+        # Add watermark using MiniMagick directly
+        image = MiniMagick::Image.open(temp_file.path)
+        image.combine_options do |c|
+          c.gravity "SouthEast"
+          c.pointsize "30"
+          c.fill "rgba(255,255,255,0.8)"
+          c.stroke "rgba(0,0,0,0.8)"
+          c.strokewidth "1"
+          c.annotate "+20+20", "rentavtokavkaz"
         end
         
+        # Create new file with watermark
+        watermarked_file = Tempfile.new(["watermarked", ".jpg"])
+        image.write(watermarked_file.path)
+        watermarked_file.rewind
+        
+        Rails.logger.info "Compressed car image with watermark: quality=#{current_quality}, size=#{watermarked_file.size} bytes, target=#{max_size} bytes"
+        
+        if watermarked_file.size <= max_size
+          return watermarked_file
+        end
+        
+        watermarked_file.close
+        temp_file.close
         break if current_quality <= 20
         current_quality -= 10
       rescue => e
@@ -114,7 +126,7 @@ class ImageUploader < Shrine
       end
     end
     
-    # Return compressed version even if it's still larger than target
-    processed_io || io
+    # Fallback to regular compression if watermarking fails
+    compress_image(io, max_size: max_size, quality: quality)
   end
 end
