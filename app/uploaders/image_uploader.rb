@@ -24,9 +24,9 @@ class ImageUploader < Shrine
       Rails.logger.info "Compressing car photo to ~450kb"
       compress_image(io, max_size: 450 * 1024, quality: 85)
     elsif record.is_a?(CompanyLogo)
-      # Company logo compression to 200-250kb
-      Rails.logger.info "Compressing company logo to ~200kb"
-      compress_image(io, max_size: 200 * 1024, quality: 70)
+      # Company logo compression to 100-150kb
+      Rails.logger.info "Compressing company logo to ~120kb"
+      compress_image(io, max_size: 120 * 1024, quality: 60)
     else
       # Default compression for all other images
       Rails.logger.info "Applying default compression to ~450kb"
