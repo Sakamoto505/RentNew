@@ -28,8 +28,8 @@ class ImageUploader < Shrine
       compress_image(io, max_size: 450 * 1024, quality: 85)
     else
       # Company logo compression (default for company_logos uploads)
-      Rails.logger.info "Compressing company logo to ~120kb"
-      compress_image(io, max_size: 120 * 1024, quality: 60)
+      Rails.logger.info "Compressing company logo to ~80kb"
+      compress_image(io, max_size: 80 * 1024, quality: 45)
     end
   end
 
