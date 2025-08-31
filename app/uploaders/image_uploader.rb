@@ -14,6 +14,7 @@ class ImageUploader < Shrine
     name = context[:name]
 
     Rails.logger.info "ImageUploader cache processing: record=#{record&.class}, name=#{name}, io=#{io.class}"
+    Rails.logger.info "Record inspect: #{record.inspect}"
 
     if record.is_a?(User) && name == :company_avatar
       # Avatar compression to ~100kb
