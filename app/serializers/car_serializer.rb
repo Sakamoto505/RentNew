@@ -7,6 +7,7 @@ module CarSerializer
       id: car.id,
       user_id: car.user_id,
       title: car.title,
+      slug: car.slug,
       description: car.description,
       location: car.location,
       price: car.price,

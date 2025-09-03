@@ -83,6 +83,7 @@
             {
               id: car.id,
               title: car.title,
+              slug: car.slug,
               location: car.location,
               price: car.price,
               fuel_type: car.fuel_type,
@@ -107,16 +108,18 @@
       end
 
       def company_names
-        companies = User.where(role: :company)
+        companies = User.where(role: [:client, :company])
                        .where.not(company_name: [nil, ""])
-                       .select(:id, :company_name)
+                       .select(:id, :company_name, :company_avatar_data, :updated_at)
                        .order(:company_name)
 
         render json: {
           companies: companies.map do |company|
             {
               id: company.id,
-              company_name: company.company_name
+              company_name: company.company_name,
+              company_avatar_url: company.company_avatar&.url,
+              updated_at: company.updated_at
             }
           end
         }
