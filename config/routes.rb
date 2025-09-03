@@ -19,6 +19,7 @@
       collection do
         post :bulk_show
         get :total_count
+        get :cars_for_sitemap
       end
     end
     resources :company_logos, only: [:destroy]

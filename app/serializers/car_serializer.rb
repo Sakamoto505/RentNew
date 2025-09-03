@@ -18,6 +18,7 @@ module CarSerializer
       year: car.year,
       drive: car.drive,
       has_air_conditioner: car.has_air_conditioner,
+      driver_only: car.driver_only,
       category: car.category,
       created_at: car.created_at,
       updated_at: car.updated_at,

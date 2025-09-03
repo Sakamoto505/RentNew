@@ -1,5 +1,5 @@
 class CarsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :bulk_show, :total_count]
+  before_action :authenticate_user!, except: [:index, :show, :bulk_show, :total_count, :cars_for_sitemap]
 
   def index
     cars = Car.includes(:car_images, :user).order(created_at: :desc)
@@ -162,6 +162,24 @@ class CarsController < ApplicationController
     render json: { total_cars_count: Car.count }
   end
 
+  def cars_for_sitemap
+    cars = Car.includes(:car_images).select(:id, :slug, :title, :updated_at, :location)
+    
+    render json: {
+      cars: cars.map do |car|
+        main_image = car.car_images.order(:position).first
+        {
+          id: car.id,
+          slug: car.slug,
+          title: car.title,
+          updated_at: car.updated_at,
+          main_image_url: main_image&.image_url,
+          location: car.location
+        }
+      end
+    }
+  end
+
   private
 
   def car_params
@@ -178,6 +196,7 @@ class CarsController < ApplicationController
       :drive,
       :category,
       :has_air_conditioner,
+      :driver_only,
       custom_fields: {},
       images: []
     )

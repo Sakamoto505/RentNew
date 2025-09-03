@@ -92,6 +92,7 @@
               horsepower: car.horsepower,
               year: car.year,
               drive: car.drive,
+              driver_only: car.driver_only,
               category: car.category,
               is_calendar: car.is_calendar,
               custom_fields: (car.custom_fields || {}).map { |k, v| { key: k, value: v } },
