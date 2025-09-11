@@ -34,6 +34,7 @@ class User < ApplicationRecord
   has_many :cars, dependent: :destroy
   has_many :favorites, dependent: :destroy
   has_many :favorite_cars, through: :favorites, source: :car
+  has_many :subscriptions, foreign_key: :company_id, dependent: :destroy
   enum :role, { client: 0, company: 1, admin: 2 }
   validates :role, presence: true
   validates :company_name, presence: true, uniqueness: true, if: :company?
@@ -49,5 +50,38 @@ class User < ApplicationRecord
     else
       update_column(:role, :client) unless client?
     end
+  end
+
+  def total_active_slots(date = Date.current)
+    return 0 unless company?
+    Subscription.total_active_slots_for_company(id, date)
+  end
+
+  def has_dedicated_site?(date = Date.current)
+    return false unless company?
+    Subscription.has_active_dedicated_site?(id, date)
+  end
+
+  def active_subscriptions(date = Date.current)
+    return Subscription.none unless company?
+    Subscription.active_subscriptions_for_company(id, date)
+  end
+
+  def can_add_car?
+    return true if has_dedicated_site?
+    
+    current_car_count = cars.count
+    available_slots = total_active_slots
+    
+    current_car_count < available_slots
+  end
+
+  def remaining_slots
+    return Float::INFINITY if has_dedicated_site?
+    
+    current_car_count = cars.count
+    available_slots = total_active_slots
+    
+    [available_slots - current_car_count, 0].max
   end
 end
