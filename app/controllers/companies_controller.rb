@@ -26,6 +26,7 @@
           region: current_user.region,
           is_partner_verified: current_user.is_partner_verified || false,
           is_phone_verified: current_user.is_phone_verified || false,
+          tarifClient: Subscription.has_active_dedicated_site?(current_user.id),
           logo_urls: current_user.company_logos.order(:position).map do |logo|
             url = logo.image_url
             Rails.logger.info "=== COMPANY LOGO URL DEBUG ==="
@@ -70,6 +71,7 @@
           company_avatar_url: user.company_avatar&.url,
           is_partner_verified: user.is_partner_verified || false,
           is_phone_verified: user.is_phone_verified || false,
+          tarifClient: Subscription.has_active_dedicated_site?(user.id),
           logo_urls: user.company_logos.order(:position).map do |logo|
             {
               id: logo.id,
@@ -195,6 +197,7 @@
           address: user.address,
           is_partner_verified: user.is_partner_verified || false,
           is_phone_verified: user.is_phone_verified || false,
+          tarifClient: Subscription.has_active_dedicated_site?(user.id),
           logo_urls: user.company_logos.order(:position).map do |logo|
             url = logo.image_url
             Rails.logger.info "=== SERIALIZE LOGO URL DEBUG ==="
