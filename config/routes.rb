@@ -30,6 +30,12 @@
       end
     end
     
+    resources :subscriptions do
+      collection do
+        get :current_status
+      end
+    end
+    
     # Админские методы
     namespace :admin do
       patch 'users/:user_id/verification', to: 'admin#update_verification'
