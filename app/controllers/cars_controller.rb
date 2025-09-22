@@ -2,7 +2,7 @@ class CarsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :bulk_show, :total_count, :cars_for_sitemap]
 
   def index
-    cars = Car.includes(:car_images, :user).order(created_at: :desc)
+    cars = Car.includes(:car_images, :user).order(created_at: :desc).distinct
 
     # === Поиск по title ===
     if (search = params[:search].presence)
