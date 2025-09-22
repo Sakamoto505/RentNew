@@ -43,7 +43,7 @@ class CarsController < ApplicationController
     Rails.logger.info "Requested page: #{params[:page] || 1}, per_page: #{per_page}"
 
     Rails.logger.info "PAGY DEBUG: per_page = #{per_page}, page = #{params[:page]}"
-    pagy, records = pagy(cars, items: per_page, page: params[:page])
+    pagy, records = pagy(cars, limit: per_page, page: params[:page])
     Rails.logger.info "PAGY RESULT: records.count = #{records.count}, pagy.page = #{pagy.page}"
     
     # Загружаем связанные данные только для записей текущей страницы
