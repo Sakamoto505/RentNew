@@ -2,7 +2,7 @@ class CarsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show, :bulk_show, :total_count, :cars_for_sitemap]
 
   def index
-    cars = Car.includes(:car_images, :user).select('DISTINCT cars.*').order(created_at: :desc)
+    cars = Car.order(created_at: :desc)
 
     # === Поиск по title ===
     if (search = params[:search].presence)
@@ -43,6 +43,9 @@ class CarsController < ApplicationController
     Rails.logger.info "Requested page: #{params[:page] || 1}, per_page: #{per_page}"
 
     pagy, records = pagy(cars, items: per_page)
+    
+    # Загружаем связанные данные только для записей текущей страницы
+    records = records.includes(:car_images, :user)
 
     Rails.logger.info "Pagy page: #{pagy.page}, count: #{pagy.count}, pages: #{pagy.pages}"
     Rails.logger.info "Records returned: #{records.count}"
