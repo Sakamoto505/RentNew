@@ -34,7 +34,20 @@ class CarsController < ApplicationController
         (params[:per_page].presence || 12).to_i.clamp(1, 100)
       end
 
+    # === Отладка пагинации ===
+    total_cars = cars.count
+    all_car_ids = cars.pluck(:id)
+    Rails.logger.info "=== PAGINATION DEBUG ==="
+    Rails.logger.info "Total cars query: #{total_cars}"
+    Rails.logger.info "All car IDs: #{all_car_ids}"
+    Rails.logger.info "Requested page: #{params[:page] || 1}, per_page: #{per_page}"
+
     pagy, records = pagy(cars, items: per_page)
+
+    Rails.logger.info "Pagy page: #{pagy.page}, count: #{pagy.count}, pages: #{pagy.pages}"
+    Rails.logger.info "Records returned: #{records.count}"
+    Rails.logger.info "Record IDs: #{records.pluck(:id)}"
+    Rails.logger.info "========================="
 
     # === Формирование ответа только из records ===
     cars_json = records.map { |car| car_response(car) }
