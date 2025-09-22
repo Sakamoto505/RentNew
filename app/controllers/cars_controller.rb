@@ -39,9 +39,6 @@ class CarsController < ApplicationController
     # === Формирование ответа только из records ===
     cars_json = records.map { |car| car_response(car) }
 
-    # Предохранитель, если внезапно вернулось больше чем per_page
-    cars_json = cars_json.first(per_page) if cars_json.size > per_page
-
     # Анти-кэш (чтобы не увидеть старый ответ)
     response.set_header("Cache-Control", "no-store, max-age=0, must-revalidate")
 
