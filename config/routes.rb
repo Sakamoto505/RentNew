@@ -36,6 +36,15 @@
       end
     end
     
+    # Черный список
+    post 'blacklist', to: 'blacklist#create'
+    get 'blacklist/mine', to: 'blacklist#mine'
+    post 'blacklist/search', to: 'blacklist#search'
+    delete 'blacklist/:id', to: 'blacklist#destroy'
+    
+    # Секретный просмотр компаний
+    get 'secret/companies-list-x9k2l3m8', to: 'companies_list#index'
+    
     # Админские методы
     namespace :admin do
       patch 'users/:user_id/verification', to: 'admin#update_verification'

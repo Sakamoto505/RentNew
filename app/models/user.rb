@@ -35,6 +35,7 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :favorite_cars, through: :favorites, source: :car
   has_many :subscriptions, foreign_key: :company_id, dependent: :destroy
+  has_many :blacklist_entries, foreign_key: :company_id, dependent: :destroy
   enum :role, { client: 0, company: 1, admin: 2 }
   validates :role, presence: true
   validates :company_name, presence: true, uniqueness: true, if: :company?
