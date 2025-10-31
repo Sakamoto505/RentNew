@@ -71,6 +71,7 @@ class BlacklistController < ApplicationController
   def serialize_blacklist_entry_for_search(entry)
     serialize_blacklist_entry(entry).merge(
       companyId: entry.company_id,
+      companyName: entry.company.company_name,
       companyAvatar: entry.company_avatar || ""
     )
   end

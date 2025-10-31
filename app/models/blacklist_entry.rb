@@ -11,12 +11,15 @@ class BlacklistEntry < ApplicationRecord
     return all if query.blank?
     
     search_terms = query.strip.split(/\s+/)
-    conditions = search_terms.map do |term|
-      sanitized_term = "%#{sanitize_sql_like(term)}%"
+    conditions = search_terms.map do |_term|
       "(first_name ILIKE ? OR last_name ILIKE ? OR dl_number ILIKE ?)"
     end.join(' AND ')
     
-    values = search_terms.flat_map { |term| ["%#{sanitize_sql_like(term)}%"] * 3 }
+    values = search_terms.flat_map do |term|
+      sanitized_term = "%#{sanitize_sql_like(term)}%"
+      [sanitized_term, sanitized_term, sanitized_term]
+    end
+    
     where(conditions, *values)
   }
 
