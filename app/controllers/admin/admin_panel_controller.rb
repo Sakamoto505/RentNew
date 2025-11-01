@@ -3,24 +3,24 @@ class Admin::AdminPanelController < ApplicationController
   before_action :ensure_admin!
 
   def companies
-    companies = User.company.order(created_at: :desc)
+    companies = User.where(role: ['company', 'client']).order(created_at: :desc)
     
     render json: {
       total: companies.count,
-      companies: companies.map do |company|
+      companies: companies.map do |user|
         {
-          id: company.id,
-          company_name: company.company_name,
-          email: company.email,
-          region: company.city_name,
-          phone_1: company.phone_1,
-          phone_2: company.phone_2,
-          is_partner_verified: company.is_partner_verified || false,
-          is_phone_verified: company.is_phone_verified || false,
-          role: company.role,
-          cars_count: company.cars.count,
-          created_at: company.created_at.iso8601,
-          updated_at: company.updated_at.iso8601
+          id: user.id,
+          company_name: user.company_name,
+          email: user.email,
+          region: user.city_name,
+          phone_1: user.phone_1,
+          phone_2: user.phone_2,
+          is_partner_verified: user.is_partner_verified || false,
+          is_phone_verified: user.is_phone_verified || false,
+          role: user.role,
+          cars_count: user.cars.count,
+          created_at: user.created_at.iso8601,
+          updated_at: user.updated_at.iso8601
         }
       end
     }
