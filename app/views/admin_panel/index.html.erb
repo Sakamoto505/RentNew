@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Админ панель - Компании</title>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .status { padding: 4px 8px; border-radius: 4px; color: white; font-size: 12px; }
+    .verified { background-color: #28a745; }
+    .not-verified { background-color: #dc3545; }
+    .actions a { margin-right: 10px; text-decoration: none; color: #007bff; }
+    .actions a:hover { text-decoration: underline; }
+    .header { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Админ панель - Компании</h1>
+    <div>
+      <%= link_to "Логины/Пароли", credentials_admin_panel_index_path, style: "color: #007bff; text-decoration: none;" %>
+    </div>
+  </div>
+
+  <p>Всего компаний: <%= @companies.count %></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Название компании</th>
+        <th>Email</th>
+        <th>Регион</th>
+        <th>Партнер</th>
+        <th>Телефон</th>
+        <th>Дата регистрации</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @companies.each do |company| %>
+        <tr>
+          <td><%= company.id %></td>
+          <td><%= company.company_name %></td>
+          <td><%= company.email %></td>
+          <td><%= company.city_name %></td>
+          <td>
+            <span class="status <%= company.is_partner_verified? ? 'verified' : 'not-verified' %>">
+              <%= company.is_partner_verified? ? 'Да' : 'Нет' %>
+            </span>
+          </td>
+          <td>
+            <span class="status <%= company.is_phone_verified? ? 'verified' : 'not-verified' %>">
+              <%= company.is_phone_verified? ? 'Да' : 'Нет' %>
+            </span>
+          </td>
+          <td><%= company.created_at.strftime("%d.%m.%Y %H:%M") %></td>
+          <td class="actions">
+            <%= link_to "Просмотр", admin_panel_path(company) %>
+            <%= link_to "Редактировать", edit_admin_panel_path(company) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</body>
+</html>

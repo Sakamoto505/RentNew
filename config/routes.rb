@@ -1,4 +1,11 @@
   Rails.application.routes.draw do
+  # Админ панель HTML
+  resources :admin_panel, only: [:index, :show, :edit, :update] do
+    collection do
+      get :credentials
+    end
+  end
+
   scope 'api' do
     devise_for :users, path: '', path_names: {
       sign_in: 'login',
