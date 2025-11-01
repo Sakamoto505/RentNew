@@ -1,11 +1,4 @@
   Rails.application.routes.draw do
-  # Админ панель HTML
-  resources :admin_panel, only: [:index, :show, :edit, :update] do
-    collection do
-      get :credentials
-    end
-  end
-
   scope 'api' do
     devise_for :users, path: '', path_names: {
       sign_in: 'login',
@@ -55,6 +48,12 @@
     # Админские методы
     namespace :admin do
       patch 'users/:user_id/verification', to: 'admin#update_verification'
+      
+      # Админ панель API
+      get 'companies', to: 'admin_panel#companies'
+      get 'companies/:id', to: 'admin_panel#show_company'
+      patch 'companies/:id', to: 'admin_panel#update_company'
+      get 'credentials', to: 'admin_panel#credentials'
     end
   end
 end
