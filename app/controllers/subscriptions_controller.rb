@@ -1,6 +1,6 @@
 class SubscriptionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_subscription, only: [:show, :update, :destroy]
+  before_action :set_subscription, only: [:show, :update, :destroy, :extend]
 
   def index
     @subscriptions = Subscription.for_company(current_user.id)
@@ -50,6 +50,38 @@ class SubscriptionsController < ApplicationController
     render json: { message: 'Подписка удалена' }
   end
 
+  def extend
+    end_date = Date.parse(params[:end_at])
+    
+    if @subscription.active?
+      # Продлеваем активную подписку
+      @subscription.update!(ends_at: end_date)
+      render json: { 
+        subscription: subscription_json(@subscription),
+        message: 'Тариф успешно продлён'
+      }
+    elsif @subscription.expired?
+      # Создаём новую подписку на основе истёкшей
+      new_subscription = Subscription.create!(
+        company_id: current_user.id,
+        plan: @subscription.plan,
+        starts_at: Date.current,
+        ends_at: end_date,
+        is_active: true
+      )
+      render json: { 
+        subscription: subscription_json(new_subscription),
+        message: 'Создан новый тариф'
+      }
+    else
+      render json: { 
+        error: 'Нельзя продлить подписку в текущем состоянии' 
+      }, status: :unprocessable_entity
+    end
+  rescue => e
+    render json: { error: e.message }, status: :unprocessable_entity
+  end
+
   def current_status
     company_id = current_user.id
     
@@ -68,7 +100,17 @@ class SubscriptionsController < ApplicationController
   end
 
   def subscription_params
-    params.require(:subscription).permit(:plan, :qty, :starts_at, :ends_at, :is_active)
+    # Поддержка нового формата с tariff/start_at/end_at/active
+    if params[:tariff].present?
+      {
+        plan: params[:tariff],
+        starts_at: params[:start_at],
+        ends_at: params[:end_at],
+        is_active: params[:active]
+      }
+    else
+      params.require(:subscription).permit(:plan, :qty, :starts_at, :ends_at, :is_active)
+    end
   end
 
   def subscription_json(subscription)

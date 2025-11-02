@@ -26,7 +26,7 @@
           region: current_user.region,
           is_partner_verified: current_user.is_partner_verified || false,
           is_phone_verified: current_user.is_phone_verified || false,
-          tarifClient: Subscription.has_active_dedicated_site?(current_user.id),
+          tariff: get_current_tariff(current_user.id),
           logo_urls: current_user.company_logos.order(:position).map do |logo|
             url = logo.image_url
             Rails.logger.info "=== COMPANY LOGO URL DEBUG ==="
@@ -71,7 +71,7 @@
           company_avatar_url: user.company_avatar&.url,
           is_partner_verified: user.is_partner_verified || false,
           is_phone_verified: user.is_phone_verified || false,
-          tarifClient: Subscription.has_active_dedicated_site?(user.id),
+          tariff: get_current_tariff(user.id),
           logo_urls: user.company_logos.order(:position).map do |logo|
             {
               id: logo.id,
@@ -179,6 +179,23 @@
         phone_data
       end
 
+      def get_current_tariff(company_id)
+        active_subscription = Subscription.active_site_subscription(company_id)
+        
+        if active_subscription
+          {
+            id: active_subscription.id,
+            plan: active_subscription.plan,
+            starts_at: active_subscription.starts_at,
+            ends_at: active_subscription.ends_at,
+            is_active: active_subscription.is_active,
+            status: active_subscription.active? ? 'active' : (active_subscription.expired? ? 'expired' : 'pending')
+          }
+        else
+          nil
+        end
+      end
+
       def serialize_profile(user)
         {
           id: user.id,
@@ -197,7 +214,7 @@
           address: user.address,
           is_partner_verified: user.is_partner_verified || false,
           is_phone_verified: user.is_phone_verified || false,
-          tarifClient: Subscription.has_active_dedicated_site?(user.id),
+          tariff: get_current_tariff(user.id),
           logo_urls: user.company_logos.order(:position).map do |logo|
             url = logo.image_url
             Rails.logger.info "=== SERIALIZE LOGO URL DEBUG ==="

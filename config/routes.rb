@@ -34,6 +34,9 @@
       collection do
         get :current_status
       end
+      member do
+        post :extend
+      end
     end
     
     # Черный список

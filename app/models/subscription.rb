@@ -3,7 +3,8 @@ class Subscription < ApplicationRecord
 
   enum :plan, { 
     dedicated_site: 'dedicated_site', 
-    slots: 'slots' 
+    slots: 'slots',
+    individual_site_v1: 'individual_site_v1'
   }
 
   validates :company_id, presence: true
@@ -20,6 +21,8 @@ class Subscription < ApplicationRecord
   scope :for_company, ->(company_id) { where(company_id: company_id) }
   scope :slots_plan, -> { where(plan: 'slots') }
   scope :dedicated_site_plan, -> { where(plan: 'dedicated_site') }
+  scope :individual_site_v1_plan, -> { where(plan: 'individual_site_v1') }
+  scope :site_plans, -> { where(plan: ['dedicated_site', 'individual_site_v1']) }
 
   def self.total_active_slots_for_company(company_id, date = Date.current)
     for_company(company_id)
@@ -35,6 +38,31 @@ class Subscription < ApplicationRecord
       .active
       .where('starts_at <= ? AND ends_at >= ?', date, date)
       .exists?
+  end
+
+  def self.has_active_individual_site_v1?(company_id, date = Date.current)
+    for_company(company_id)
+      .individual_site_v1_plan
+      .active
+      .where('starts_at <= ? AND ends_at >= ?', date, date)
+      .exists?
+  end
+
+  def self.has_active_site?(company_id, date = Date.current)
+    for_company(company_id)
+      .site_plans
+      .active
+      .where('starts_at <= ? AND ends_at >= ?', date, date)
+      .exists?
+  end
+
+  def self.active_site_subscription(company_id, date = Date.current)
+    for_company(company_id)
+      .site_plans
+      .active
+      .where('starts_at <= ? AND ends_at >= ?', date, date)
+      .order(created_at: :desc)
+      .first
   end
 
   def self.active_subscriptions_for_company(company_id, date = Date.current)
