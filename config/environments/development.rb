@@ -76,7 +76,7 @@ Rails.application.configure do
 
   # Allow requests from your domain
   config.hosts << "rentavtokavkaz.ru"
-  config.hosts << "http://127.0.0.1:3001"
+  config.hosts << "http://127.0.0.1:3008"
   config.hosts << "www.rentavtokavkaz.ru"
 
   # Disable host authorization entirely (temporary debug)
